@@ -9,13 +9,13 @@ y menor gasto -en proceso-.
 
 """-----------------------Comienza-Funciones--------------------------------"""
 
-def egresos_totales(egresos):
+def egresos_totales(egresos,costo_agua,costo_electricidad, costo_telefono_cable,costo_gas,costo_transporte,costo_extra):
     """
-    Recibe: estado inicial de egresos (egresos=0)
+    Recibe: estado inicial de egresos (egresos=0) y cantidades guardadas en cada categoría de costos.
     Se le suman todas las categorías de costo
     Devuelve: egresos totales
     """
-    egresos=egresos + costo_agua
+    egresos=costo_agua
     egresos=egresos + costo_electricidad
     egresos=egresos + costo_telefono_cable
     egresos=egresos + costo_gas
@@ -31,10 +31,23 @@ def calculo_balance(balance,egresos):
     funcion de egresos_totales
     Devuelve: balance reducido
     """
-    return balance - egresos_totales(egresos)
+    return balance - egresos_totales(egresos,costo_agua,costo_electricidad, costo_telefono_cable,costo_gas,costo_transporte,costo_extra)
+
+def egreso_maximo(costo_agua,costo_electricidad, costo_telefono_cable,costo_gas,costo_transporte,costo_extra):
+  """
+  Recibe: Cada categoría de egreso.
+  Devuelve: Categoría con mayor valor
+  """
+  return max(costo_agua,costo_electricidad, costo_telefono_cable,costo_gas,costo_transporte,costo_extra)
+
+def egreso_minimo(costo_agua,costo_electricidad, costo_telefono_cable,costo_gas,costo_transporte,costo_extra):
+  """
+  Recibe: Cada categoría de egreso.
+  Devuelve: Categoría con menor valor
+  """
+  return min(costo_agua,costo_electricidad, costo_telefono_cable,costo_gas,costo_transporte,costo_extra)
 
 """----------------------Comienza-Código-Principal--------------------------"""
-
 egresos=0
 
 print("Te damos la bienvenida al sistema Tu Dinero Tu Bienestar (TDTB)")
@@ -58,19 +71,22 @@ costo_transporte = float(input("¿Cuánto gastas en transporte (tarifa de camió
 
 costo_extra = float(input("¿Cuánto debes por algún gasto extra \n"))
 
+print("¿Qué necesitas?\n")
+print("1. Desglose completo de egresos y balance final\n")
+print("2. Categoría de egreso mayor y menor, con balance final\n")
 
-print("\nTu balance para este mes es de: ", calculo_balance(balance,egresos), " MXN\n")
-
-print("Pagas por agua: ", costo_agua, " MXN\n")
-
-print("Pagas por electricidad: ", costo_electricidad, " MXN\n")
-
-print("Pagas por teléfono y cable: ", costo_telefono_cable, " MXN\n")
-
-print("Pagas por gas: ", costo_gas, " MXN\n")
-
-print("Pagas por transporte: ", costo_transporte, " MXN\n")
-
-print("Pagas por algún gasto extra: ", costo_extra, " MXN\n")
-
-
+opcion=int(input("Selecciona una función: "))
+if opcion==1:
+  print("\nTu balance para este mes es de: ", calculo_balance(balance,egresos), " MXN\n")
+  print("Pagas por agua: ", costo_agua, " MXN\n")
+  print("Pagas por electricidad: ", costo_electricidad, " MXN\n")
+  print("Pagas por teléfono y cable: ", costo_telefono_cable, " MXN\n")
+  print("Pagas por gas: ", costo_gas, " MXN\n")
+  print("Pagas por transporte: ", costo_transporte, " MXN\n")
+  print("Pagas por algún gasto extra: ", costo_extra, " MXN\n")
+elif opcion==2:
+  print("\nTu balance para este mes es de: ", calculo_balance(balance,egresos), " MXN\n")
+  print("Mayor egreso: ", egreso_maximo(costo_agua,costo_electricidad,costo_telefono_cable,costo_gas,costo_transporte,costo_extra)," MXN por ")
+  print("Menor ingreso", egreso_minimo(costo_agua,costo_electricidad, costo_telefono_cable,costo_gas,costo_transporte,costo_extra), " MXN por ")
+else:
+  print("Elija una opción válida")
