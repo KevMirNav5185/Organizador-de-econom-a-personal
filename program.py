@@ -1,10 +1,14 @@
 """
 Organizador de economía personal.
-El programa es un desglosador de ingresos mensuales en categorías de egresos.
-Recibe un ingreso mensual y las cantidades de dinero que el usuario gasta 
-por ciertas categorías. Al final entrega un balance y ya sea un desglose
-completo por categoría de egreso, o solo las categorías de mayor
-y menor gasto junto con el balance.
+El programa cuenta con 4 diferentes funciones relevantes para el manejo de
+la economía personal:
+1. Desglose completo de egresos y balance final
+2. Muestra la categoría de egreso mayor y menor, con balance final
+3. Tiempo necesario para ahorrar una cantidad
+4. Cálculo de la ganancia y gasto promedio diarios o semanales.
+Recibe principalmente un ingreso mensual y las cantidades de dinero que el
+usuario gasta por ciertas categorías. Dependiendo de la función, recibe otros
+valores. Al final, ejecuta la función que desee el usuario.
 """
 
 """-----------------------Comienzan-Funciones--------------------------------"""
@@ -22,14 +26,15 @@ def egresos_totales(egresos, lista_egresos):
   return egresos
 
 
-def calculo_balance(balance, egresos):
+def calculo_balance(balance, ingreso, egresos):
     """
-    Recibe: ingreso mensual del usuario (balance) y los egresos acumulados en
+    Recibe: Estado inicial del balance (balance=0),ingreso mensual del
+    usuario (ingreso) y los egresos acumulados en
     "egresos".
-    Se le resta al balance el total de egresos.
-    Devuelve: balance reducido.
+    Se le resta al ingreso el total de egresos y se guarda en balance.
+    Devuelve: balance.
     """
-    balance = balance - egresos
+    balance = ingreso - egresos
 
     return balance
 
@@ -55,14 +60,14 @@ def identifica_categoria(valor_categoria, lista_egresos):
     return " MXN por algún gasto extra"
 
 
-def tiempo_para_ahorro(dinero_acumulado, ahorro, balance, egresos, meta_ahorro,
+def tiempo_para_ahorro(dinero_acumulado, ahorro, balance, ingreso, egresos, meta_ahorro,
                        porcentaje_ahorro, incremento_ingresos,
                        periodo_incremento_ingresos, incremento_egresos,
                        periodo_incremento_egresos, meses):
     """
     Recibe: una variable acumuladora (dinero acumulado), una variable
     ajustable para que el cálculo del ahorro se simplifique (ahorro),
-    el balance, los egresos totales, una meta de ahorro, cuánto y 
+    el balance, el ingreso mensual, los egresos totales, una meta de ahorro, cuánto y 
     cada cuánto aumentaran los ingresos y egresos, y un contador
     que es lo que se requiere calcular (meses).
     La función calcula los meses necesarios para ahorrar cierta cantidad
@@ -74,35 +79,53 @@ def tiempo_para_ahorro(dinero_acumulado, ahorro, balance, egresos, meta_ahorro,
     while (dinero_acumulado < meta_ahorro):  # Corre la operación mientras
         #no se cumpla la meta
 
-        ahorro = calculo_balance(balance, egresos)  # El balance del mes es la
+        # El balance del mes es la
+        ahorro = calculo_balance(balance, ingreso, egresos)
         #base del ahorro mensual
-        ahorro = ahorro*porcentaje_ahorro  # Se calcula el porcentaje ahorrado
-        #del balance
+        if ahorro > 0:
+          # Se calcula el porcentaje ahorrado solo si hay un balance positivo
+          ahorro = ahorro*porcentaje_ahorro
         dinero_acumulado = dinero_acumulado + ahorro  # Se va acumulando el ahorro
 
         meses = meses+1  # Se va avanzando en el tiempo mes por mes
 
-        if meses == periodo_incremento_ingresos:  # Haz el ajuste de ingresos
+        if (meses % periodo_incremento_ingresos) == 0:  # Haz el ajuste de ingresos
             #cuando se cumpla el periodo
-            balance = balance + (balance*incremento_ingresos)
-        if meses == periodo_incremento_egresos:  # Haz el ajuste de egresos cuando
+            ingreso = ingreso + (ingreso*incremento_ingresos)
+        if (meses % periodo_incremento_egresos) == 0:  # Haz el ajuste de egresos cuando
             #se cumpla el periodo
             egresos = egresos + (egresos*incremento_egresos)
 
     return meses  # Regresa el tiempo requerido
 
 
+def calculo_valor_en_periodo(valor, periodo):
+  """
+  Recibe: valor a calcular (ingreso o egreso) y el código del periodo de tiempo.
+  Identifica si se seleccionó diario o semanal: Si fue diario (1), se divide el
+  valor entre el promedio de días en un mes del año. Si fue semanal (2),
+  se divide el valor entre el número de semanas en un mes. 
+  Se guarda el valor en una auxiliar (reporte).
+  Devuelve: auxiliar (reporte)
+  """
+  if periodo == 1:  # 1, diario
+    reporte = valor/30.417  # valor/promedio de días en un mes del año
+  elif periodo == 2:  # 2, semanal
+    reporte = valor/4  # valor/semanas en un mes
+  return ("%.2f" % (reporte))
+
+
 """----------------------Comienza-Código-Principal--------------------------"""
 print("Te damos la bienvenida al sistema Tu Dinero Tu Bienestar (TDTB)")
 
-"""-------------Recopilación--de--datos---------------"""
+"""------------------Recopilación--de--datos---------------------------------"""
 
-balance = float(input("¿Cuánto dinero recibiste? -Ingreso mensual\n"))
+ingreso = float(input("¿Cuánto dinero recibiste? -Ingreso mensual\n"))
 #Comprobación
-while balance < 0:
-    balance = float(input("Error. Ingrese un valor positivo: "))
+while ingreso < 0:
+    ingreso = float(input("Error. Ingrese un valor positivo: "))
 
-print("\nTu ingreso mensual es de: ", balance, " MXN \n")
+print("\nTu ingreso mensual es de: ", ingreso, " MXN \n")
 
 #Lista con las indicaciones para el usuario
 lista_egresos = ["¿Cuánto debes pagar por agua durante el mes? ", "¿Cuánto debes pagar por electricidad durante\
@@ -111,7 +134,8 @@ lista_egresos = ["¿Cuánto debes pagar por agua durante el mes? ", "¿Cuánto d
 
 #[Agua],[Electricidad],[Tel y cable],[Gas],[Transporte],[Extra]
 
-#Función: Registra cada categoría de egresos al reemplazar cada elemento de la lista por un float
+#Función: Registra cada categoría de egresos al reemplazar cada elemento de 
+#la lista por un float
 j = 0  # Contador
 
 for i in lista_egresos:
@@ -132,21 +156,26 @@ print("¿Qué necesitas?\n")
 print("1. Desglose completo de egresos y balance final\n")
 print("2. Categoría de egreso mayor y menor, con balance final\n")
 print("3. Tiempo necesario para ahorrar una cantidad\n")
+print("4. Ganancia, gasto y margen promedio diarios o semanales\n")
 
 #Cálculo de los egresos totales
 egresos = 0
 egresos = egresos_totales(egresos, lista_egresos)
 
+#Cálculo del balance
+balance = 0
+balance = calculo_balance(balance, ingreso, egresos)
+
 opcion = int(input("Selecciona una función: "))
 
 if opcion == 1:
   print("\nTu balance para este mes es de: ",
-        calculo_balance(balance, egresos), " MXN\n")
+        balance, " MXN\n")
 
   #Desglose por categorías
   print("Pagas por agua: ", lista_egresos[0], " MXN\n")  # Imprime el valor en
-  #la posición relacionada
-  #al orden ya establecido
+                                                         #la posición relacionada
+                                                         #al orden ya establecido
   print("Pagas por electricidad: ", lista_egresos[1], " MXN\n")
   print("Pagas por teléfono y cable: ", lista_egresos[2], " MXN\n")
   print("Pagas por gas: ", lista_egresos[3], " MXN\n")
@@ -159,7 +188,7 @@ elif opcion == 2:
   valor_minimo = min(lista_egresos)
 
   print("\nTu balance para este mes es de: ",
-        calculo_balance(balance, egresos), " MXN\n")
+        balance, " MXN\n")
 
   print("Egreso maximo: ", valor_maximo,
         identifica_categoria(valor_maximo, lista_egresos))
@@ -221,7 +250,7 @@ elif opcion == 3:
 
     print("\nPara ahorrar ", meta_ahorro,
           " MXN bajo los siguientes parámetros: ")
-    print("\nIngresos actuales: ", balance, " MXN")
+    print("\nIngresos actuales: ", ingreso, " MXN")
     print("Egresos actuales: ", egresos, " MXN")
     print("Ahorrando el ", porcentaje_ahorro, " del balance")
     print("Los ingresos aumentan a razón de ", incremento_ingresos, " cada ",
@@ -229,13 +258,38 @@ elif opcion == 3:
     print("Los egresos aumentan a razón de ", incremento_egresos, " cada ",
           periodo_incremento_egresos, " mes/es")
     print("\nSe requiere/n ", tiempo_para_ahorro(dinero_acumulado, ahorro,
-                                                 balance, egresos, meta_ahorro,
+                                                 balance, ingreso, egresos, meta_ahorro,
                                                  porcentaje_ahorro,
                                                  incremento_ingresos,
                                                  periodo_incremento_ingresos,
                                                  incremento_egresos,
-                                                 periodo_incremento_egresos,meses),
+                                                 periodo_incremento_egresos, meses),
                                                  " mes/es")
+
+elif opcion == 4:
+  print("Establece el periodo de tiempo para el cálculo\n")
+  print("1. Reporte diario\n")
+  print("2. Reporte semanal\n")
+  periodo = int(input("Selecciona un periodo de tiempo: "))
+
+  #Comprobación
+  while (periodo != 1) and (periodo != 2):
+    periodo = int(input("Error. Selecciona 1 o 2: "))
+
+  if periodo == 1:
+    print("\nIngreso diario promedio: ",
+          calculo_valor_en_periodo(ingreso, periodo), " MXN")
+    print("Egreso diario promedio: ",
+          calculo_valor_en_periodo(egresos, periodo), " MXN")
+    print("Margen diario promedio: ",
+          calculo_valor_en_periodo(balance, periodo), " MXN")
+  else:
+    print("\nIngreso semanal promedio: ",
+          calculo_valor_en_periodo(ingreso, periodo), " MXN")
+    print("Egreso semanal promedio: ",
+          calculo_valor_en_periodo(egresos, periodo), " MXN")
+    print("Margen diario promedio: ",
+          calculo_valor_en_periodo(balance, periodo), " MXN")
 
 else:
   print("Elija una opción válida (1-3)")
