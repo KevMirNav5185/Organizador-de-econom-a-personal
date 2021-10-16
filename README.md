@@ -18,6 +18,6 @@ por ciertas categorías. Dependiendo de la función, recibe otros valores. Al fi
 
 **E1b** (imprime categorías donde hay un mayor y menor gasto, además del balance)
 
-**E1c** (calcula cuántos meses se requerirían para ahorrar cierto dinero, dados ciertos parámetros)
+**E1c** (calcula cuántos meses se requerirían para ahorrar cierto dinero, dados ciertos parámetros, y grafica cómo avanza el ahorro a través de los meses)
 
 **E1d** (imprime mi ingreso, egreso y margen promedio diario o semanale)
