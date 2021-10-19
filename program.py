@@ -19,6 +19,9 @@ en diversos formatos o en un navegador. La escogí porque era sencilla de utiliz
 y flexible en cuanto a poder visualizar los gráficos en navegador, permitiendo
 que el código funcione en casi cualquier equipo. La guía de su uso que utilicé es
 esta: http://www.pygal.org/en/stable/documentation/first_steps.html
+
+Líneas de código donde se ve su uso:
+    308 a 321 Generación de gráfica en función principal 3
 """
 
 
