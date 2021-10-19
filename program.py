@@ -1,5 +1,7 @@
 """
-Organizador de economía personal.
+Autor: Kevin Alejandro Miranda Navarrete
+Matrícula: A01705185
+Título del proyecto: Organizador de economía personal
 El programa cuenta con 4 diferentes funciones relevantes para el manejo de
 la economía personal:
 1. Desglose completo de egresos y balance final
