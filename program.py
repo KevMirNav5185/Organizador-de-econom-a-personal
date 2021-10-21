@@ -199,6 +199,9 @@ balance = 0
 balance = calculo_balance(balance, ingreso, egresos)
 
 opcion = int(input("Selecciona una función: "))
+#Comprobación
+while (opcion!=1) and (opcion!=2) and (opcion!=3) and (opcion!=4):
+    opcion = int(input("Error. Selecciona un número entre 1 y 4: "))
 
 if opcion == 1:
   print("\nTu balance para este mes es de: ",
@@ -346,6 +349,3 @@ elif opcion == 4:
           calculo_valor_en_periodo(egresos, periodo), " MXN")
     print("Margen diario promedio: ",
           calculo_valor_en_periodo(balance, periodo), " MXN")
-
-else:
-  print("Elija una opción válida (1-3)")
