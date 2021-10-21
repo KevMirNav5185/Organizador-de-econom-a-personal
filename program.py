@@ -8,7 +8,7 @@ la economía personal:
 2. Muestra la categoría de egreso mayor y menor, con balance final
 3. Tiempo necesario para ahorrar una cantidad y gráfica del ahorro a través del
     tiempo.
-4. Cálculo de la ganancia y gasto promedio diarios o semanales.
+4. Cálculo de la ganancia, gasto y margen promedio diarios o semanales.
 Recibe principalmente un ingreso mensual y las cantidades de dinero que el
 usuario gasta por ciertas categorías. Dependiendo de la función, recibe otros
 valores. Al final, ejecuta la función que desee el usuario.
@@ -23,7 +23,7 @@ que el código funcione en casi cualquier equipo. La guía de su uso que utilic�
 esta: http://www.pygal.org/en/stable/documentation/first_steps.html
 
 Líneas de código donde se ve su uso:
-    308 a 321 Generación de gráfica en función principal 3
+    307 a 322 Generación de gráfica en función principal 3
 """
 
 
@@ -86,41 +86,39 @@ def tiempo_para_ahorro(dinero_acumulado, lista_dinero_acumulado, ahorro,
                        periodo_incremento_ingresos, incremento_egresos,
                        periodo_incremento_egresos, meses, lista_meses):
     """
-    Recibe: una variable acumuladora (dinero acumulado), una variable
-    ajustable para que el cálculo del ahorro se simplifique (ahorro),
+    Recibe: una variable acumuladora (dinero acumulado), una lista para guardar
+    sus distintos valores a través del tiempo (lista_dinero_acumulado), una 
+    variable ajustable para que el cálculo del ahorro se simplifique (ahorro),
     el balance, el ingreso mensual, los egresos totales, una meta de ahorro, cuánto y 
-    cada cuánto aumentaran los ingresos y egresos, y un contador
-    que es lo que se requiere calcular (meses).
+    cada cuánto aumentaran los ingresos y egresos, un contador
+    que es lo que se requiere calcular (meses) y una lista para guardar
+    sus distintos valores a través del tiempo (lista_meses).
     La función calcula los meses necesarios para ahorrar cierta cantidad
     de dinero utilizando un ciclo while y dados ciertos parámetros. Además de
-    que guarda los valores en una lista para graficar.
+    que guarda los valores del dinero acumulado y los meses en una lista para graficar.
     (Explicación más detallada a un lado de los procesos)
     Regresa: Tiempo en meses.
     """
 
-    while (dinero_acumulado < meta_ahorro):  # Corre la operación mientras
-        #no se cumpla la meta
+    while (dinero_acumulado < meta_ahorro): # Corre la operación mientras no se cumpla la meta
 
-        # El balance del mes es la
+        # El balance del mes es la base del ahorro mensual
         ahorro = calculo_balance(balance, ingreso, egresos)
-        #base del ahorro mensual
-        if ahorro > 0:
-          # Se calcula el porcentaje ahorrado solo si hay un balance positivo
+        
+        if ahorro > 0: # Se calcula el porcentaje ahorrado solo si hay un balance positivo
           ahorro = ahorro*porcentaje_ahorro
+          
         dinero_acumulado = dinero_acumulado + ahorro  # Se va acumulando el ahorro
 
-        lista_dinero_acumulado.append(dinero_acumulado)  # Agrega el ahorro a
-        #una lista para graficar
+        lista_dinero_acumulado.append(dinero_acumulado) # Agrega el ahorro a una lista para graficar
 
         meses = meses+1  # Se va avanzando en el tiempo mes por mes
 
         lista_meses.append(meses)  # Agrega el mes a una la lista para graficar
 
-        if (meses % periodo_incremento_ingresos) == 0:  # Haz el ajuste de ingresos
-            #cuando se cumpla el periodo
+        if (meses % periodo_incremento_ingresos) == 0:  # Haz el ajuste de ingresos cuando se cumpla el periodo
             ingreso = ingreso + (ingreso*incremento_ingresos)
-        if (meses % periodo_incremento_egresos) == 0:  # Haz el ajuste de egresos cuando
-            #se cumpla el periodo
+        if (meses % periodo_incremento_egresos) == 0:  # Haz el ajuste de egresos cuando se cumpla el periodo
             egresos = egresos + (egresos*incremento_egresos)
 
     return meses  # Regresa el tiempo requerido
@@ -164,11 +162,12 @@ lista_egresos = ["¿Cuánto debes pagar por alimento durante el mes? ",
                  "¿Cuánto gastas en transporte (tarifa de camión o gasto en gasolina/servicio de transporte) durante el mes? ",
                  "¿Cuánto debes por algún gasto extra "]
 
-#[Alimento] 0, [Despensa] 1, [Agua] 2, [Electricidad] 3, [Tel y cable] 4,
-# [Gas] 5, [Transporte] 6, [Extra] 7
+""" Descripción de la lista:
+    [Alimento] 0, [Despensa] 1, [Agua] 2, [Electricidad] 3, [Tel y cable] 4,
+    [Gas] 5, [Transporte] 6, [Extra] 7 """
 
-#Función: Registra cada categoría de egresos al reemplazar cada elemento de
-#la lista por un float
+"""Función: Registra cada categoría de egresos al reemplazar cada elemento de
+la lista por un float """
 j = 0  # Contador
 
 for i in lista_egresos:
@@ -186,10 +185,10 @@ for i in lista_egresos:
 """------------------Comienzan--menú--y--operaciones-----------------------"""
 
 print("¿Qué necesitas?\n")
-print("1. Desglose completo de egresos y balance final\n")
-print("2. Categoría de egreso mayor y menor, con balance final\n")
-print("3. Tiempo necesario para ahorrar una cantidad y gráfica del ahorro a través del tiempo\n")
-print("4. Ganancia, gasto y margen promedio diarios o semanales\n")
+print("1. Desglose completo de egresos y balance final")
+print("2. Categoría de egreso mayor y menor, con balance final")
+print("3. Tiempo necesario para ahorrar una cantidad y gráfica del ahorro a través del tiempo")
+print("4. Ganancia, gasto y margen promedio diarios o semanales")
 
 #Cálculo de los egresos totales
 egresos = 0
@@ -205,11 +204,10 @@ if opcion == 1:
   print("\nTu balance para este mes es de: ",
         balance, " MXN\n")
 
-  #Desglose por categorías
-  # Imprime el valor en
+  """Desglose por categorías:
+     Imprime el valor en la posición relacionada al orden ya establecido"""
+     
   print("Pagas por alimento: ", lista_egresos[0], " MXN\n")
-  #la posición relacionada
-  #al orden ya establecido
   print("Pagas por despensa: ", lista_egresos[1], " MXN\n")
   print("Pagas por agua: ", lista_egresos[2], " MXN\n")
   print("Pagas por electricidad: ", lista_egresos[3], " MXN\n")
@@ -236,8 +234,7 @@ elif opcion == 3:
     meses = 0  # contador
     ahorro = 0.0  # variable de cambio que se ajusta
     dinero_acumulado = 0.0  # acumulador
-    # lista con el rango de la gráfica ahorro vs tiempo
-    lista_dinero_acumulado = [0]
+    lista_dinero_acumulado = [0] # lista con el rango de la gráfica ahorro vs tiempo
     lista_meses = [0]  # lista con el dominio de la gráfica ahorro vs tiempo
 
     """---------------Comienza recopilación de parámetros-------------------"""
@@ -307,9 +304,11 @@ elif opcion == 3:
                                                  meses, lista_meses),
           " mes/es")
 
-    """--------------------Generación de gráfica---------------------------"""
-    #Genera una gráfica lineal con título "Ahorro a través de los meses" y
-    #títulos del dominio "Mes" y rango "Ahorro (MXN)"
+    """--------------------Generación de gráfica---------------------------
+    
+    Genera una gráfica lineal con título "Ahorro a través de los meses" y
+    títulos del dominio "Mes" y rango "Ahorro (MXN)"           """
+    
     grafica_ahorro_tiempo = pygal.Line(title='Ahorro a través de los meses',
                                        x_title='Mes', y_title='MXN')
 
@@ -324,9 +323,9 @@ elif opcion == 3:
 
 
 elif opcion == 4:
-  print("Establece el periodo de tiempo para el cálculo\n")
-  print("1. Reporte diario\n")
-  print("2. Reporte semanal\n")
+  print("\nEstablece el periodo de tiempo para el cálculo")
+  print("1. Reporte diario")
+  print("2. Reporte semanal")
   periodo = int(input("Selecciona un periodo de tiempo: "))
 
   #Comprobación
